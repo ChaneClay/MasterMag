@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sz.dao.StudentDao">
+    <update id="update">
+        update student
+        <set>
+            <if test="username != null and username != ''">
+                username = #{username},
+            </if>
+            <if test="age != null and age != ''">
+                age = #{age},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+            <if test="email != null and email != ''">
+                email = #{email},
+            </if>
+            <if test="date != null and date != ''">
+                date = #{date},
+            </if>
+            <if test="idNum != null and idNum != ''">
+                idNum = #{idNum},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="sex != null and sex != ''">
+                sex = #{sex},
+            </if>
+            <if test="introduce != null and introduce != ''">
+                introduce = #{introduce},
+            </if>
+        </set>
+        where id = #{id}
+
+    </update>
+
+
+
+
+    <select id="findUser" resultType="com.sz.pojo.Student">
+        select *
+        from student
+
+        where num = #{num}
+        and password = #{password}
+    </select>
+
+    <select id="createUser" resultType="com.sz.pojo.Student">
+      insert into student (num, password, t_id)
+                VALUES (#{num}, #{password}, 1);
+    </select>
+
+    <select id="findTeacher" resultType="com.sz.pojo.Teacher" resultMap="teacherDetail">
+        SELECT t.*
+        FROM student s, teacher t
+        WHERE s.t_id = t.id
+        and s.id = #{id}
+    </select>
+
+    <select id="checkUser" resultType="com.sz.pojo.Student">    <!-- 检查用户账号是否注册过 -->
+        select * from student where num = #{num}
+    </select>
+    <resultMap id="teacherDetail" type="com.sz.pojo.Teacher">                   <!-- 次  -->
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="position" column="position"/>
+        <result property="age" column="age"/>
+        <result property="phone" column="phone"/>
+        <result property="email" column="email"/>
+        <result property="address" column="address"/>
+        <result property="tranningPlan" column="tranningPlan"/>
+
+        <association property="student" javaType="com.sz.pojo.Student">         <!-- 主  -->
+            <id property="id" column="id"/>
+            <result property="num" column="num"/>
+        </association>
+
+    </resultMap>
+
+</mapper>
